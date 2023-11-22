@@ -1,5 +1,6 @@
 const express = require("express");
 const userController = require("./userController");
+const spotifyController = require("./spotifyController");
 // const productController = require("./productController");
 // import other controllers
 
@@ -9,10 +10,8 @@ const router = express.Router();
 router.get("/users", userController.getUsers);
 router.post("/users", userController.createUser);
 
-// Product routes
-// router.get('/products', productController.getProducts);
-// router.post('/products', productController.createProduct);
-
-// Add other routes for different controllers
-
+// spotify routes
+router.get("/spotify-login", spotifyController.spotifyLogin);
+router.get("/spotify-callback", spotifyController.callback);
+router.get("/test", spotifyController.test);
 module.exports = router;
