@@ -5,78 +5,55 @@ const executeQuery = require("../dao/db").executeQuery; // Adjust the path as ne
 const SpotifyStrategy = require("passport-spotify").Strategy;
 // todo This file will need to be customzied according to your strategy
 // I will update this as i use more strategies
+require("dotenv").config();
 
-passport.serializeUser(function (user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async function (id, done) {
-  try {
-    let result = await executeQuery("SELECT * FROM users WHERE id = $1", [id]);
-    if (result.rows.length > 0) {
-      done(null, result.rows[0]);
-    } else {
-      done(null, false);
-    }
-  } catch (e) {
-    console.error(e);
-    done(e);
-  }
-});
-
-passport.use(
-  new SpotifyStrategy(
-    {
-      clientID: config.CLIENT_ID,
-      clientSecret: config.CLIENT_SECRET,
-      callbackURL: config.CALLBACK_URL,
-    },
-    async function (accessToken, refreshToken, profile, cb) {
-      try {
-        const user = await findOrCreateUser(profile, accessToken);
-        return cb(null, user);
-      } catch (err) {
-        return cb(err);
+module.exports = function (passport) {
+  passport.use(
+    new SpotifyStrategy(
+      {
+        clientID: config.CLIENT_ID,
+        clientSecret: config.CLIENT_SECRET,
+        callbackURL: "http://localhost:5000/api/callback",
+      },
+      async function (accessToken, refreshToken, profile, cb) {
+        try {
+          const user = await findOrCreateUser(profile, accessToken);
+          return cb(null, user);
+        } catch (err) {
+          return cb(err);
+        }
       }
-    }
-  )
-);
+    )
+  );
 
-async function findOrCreateUser(profile, accessToken) {
-  const client = await pool.connect();
-  try {
-    // Check if user exists
-    let res = await client.query("SELECT * FROM users WHERE spotify_id = $1", [
-      profile.id,
-    ]);
-    if (res.rows.length > 0) {
-      // update the access token if it has changed
-      if (res.rows[0].access_token !== accessToken) {
-        await client.query(
-          "UPDATE users SET access_token = $1, access_token_last_updated = CURRENT_TIMESTAMP WHERE google_id = $2",
-          [accessToken, profile.id]
-        );
+  async function findOrCreateUser(profile, accessToken) {
+    try {
+      // Check if user exists
+      let res = await executeQuery(
+        "SELECT * FROM users WHERE spotify_id = $1",
+        [profile.id]
+      );
+
+      if (res.rows.length > 0) {
+        // Update the access token if it has changed
+        if (res.rows[0].access_token !== accessToken) {
+          await executeQuery(
+            "UPDATE users SET access_token = $1, updated_at = CURRENT_TIMESTAMP WHERE spotify_id = $2",
+            [accessToken, profile.id]
+          );
+        }
+        return res.rows[0]; // User exists
       }
-      return res.rows[0]; // User exists
+
+      // If not, create a new user
+      res = await executeQuery(
+        "INSERT INTO users (spotify_id, email, display_name, access_token, created_at, updated_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *",
+        [profile.id, profile.emails[0].value, profile.displayName, accessToken]
+      );
+
+      return res.rows[0];
+    } catch (err) {
+      throw err;
     }
-
-    // If not, create new user
-    res = await client.query(
-      "INSERT INTO users (spotify_id, email, name, accessToken, access_token_last_updated) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [
-        profile.id,
-        profile.emails[0].value,
-        profile.displayName,
-        accessToken,
-        Date.now(),
-      ]
-    );
-    return res.rows[0];
-  } catch (err) {
-    throw err;
-  } finally {
-    client.release();
   }
-}
-
-module.exports = passport;
+};
