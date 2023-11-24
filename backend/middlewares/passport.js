@@ -13,7 +13,7 @@ module.exports = function (passport) {
       {
         clientID: config.CLIENT_ID,
         clientSecret: config.CLIENT_SECRET,
-        callbackURL: "http://localhost:5000/api/callback",
+        callbackURL: process.env.CALLBACK_URL,
       },
       async function (accessToken, refreshToken, profile, cb) {
         try {
