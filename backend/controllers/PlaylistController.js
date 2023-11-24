@@ -1,4 +1,4 @@
-const PlaylistService = require("../services/playlistService");
+const PlaylistService = require("../services/PlaylistService");
 
 module.exports.getPlaylists = async (req, res) => {
   try {
