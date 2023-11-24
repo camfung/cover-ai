@@ -15,7 +15,7 @@ module.exports.getPlaylists = async (req, res) => {
 
 module.exports.getPlaylistTracks = async (req, res) => {
   try {
-    const { playlistId, numTracks = 10, offset = 0 } = req.query;
+    const { playlistId, numTracks = 50, offset = 0 } = req.query;
 
     if (!playlistId || isNaN(numTracks) || isNaN(offset)) {
       return res.status(400).send("Invalid parameters");

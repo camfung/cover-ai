@@ -16,15 +16,15 @@ class OpenAIService {
   ) {
     try {
       const finalPrompt =
-        "A play list cover that goes follows the vibe of the following songs: " +
+        "A play list cover that follows the vibe of the following song titles: " +
         prompt;
       const options = {
         prompt: finalPrompt,
-        model: model || "dall-e-2",
+        model: model || "dall-e-3",
         n: numberOfImages || 1,
         quality: quality || "standard",
         response_format: responseFormat || "url",
-        size: size || "256x256",
+        size: size || "1024x1024",
         style: style || "vivid",
       };
 

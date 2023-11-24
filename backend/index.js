@@ -24,6 +24,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.urlencoded());
+app.use(express.json());
 passportSetup(passport);
 passport.serializeUser(function (user, done) {
   done(null, user.id);

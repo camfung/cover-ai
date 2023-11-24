@@ -1,14 +1,25 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
-
+import { Button, Typography, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 const SongsDataGrid = () => {
     const path = window.location.pathname; // This will be '/test' in your case
     const pathSegments = path.split('/'); // Split the path by '/'
     const value = pathSegments[2]; // Get the second segment which is 'test'
     const [songsData, setSongsData] = useState([]);
     const [loading, setLoading] = useState([false]);
-    const [selectedRows, setSelectedRows] = useState([]);
+    const [selectedRowIds, setSelectedRowIds] = useState([]);
+    const [selectedSongs, setSelectedSongs] = useState([]);
+    const navigate = useNavigate();
+    const formRef = useRef();
+
+    const redirectToConfirmPage = useCallback(() => {
+        const songs = selectedRowIds.map(id => songsData[id])
+        console.log("🚀 ~ file: SongsDataGrid.jsx:19 ~ redirectToConfirmPage ~ songs:", songs)
+        location.state = { selectedSongs: songs }
+        navigate("/makePlaylistCover", { state: { selectedSongs: songs } })
+    }, [selectedRowIds, setSelectedSongs])
     useEffect(() => {
         const fetchPlaylistsTracks = async () => {
             try {
@@ -43,7 +54,6 @@ const SongsDataGrid = () => {
             releaseDate: item.track.album.release_date
         }));
         return r
-        console.log("🚀 ~ file: SongsDataGrid.jsx:40 ~ r ~ r:", r)
     }, [songsData]);
 
     // Define the columns for the Data Grid
@@ -54,24 +64,33 @@ const SongsDataGrid = () => {
         { field: 'albumName', headerName: 'Album Name', width: 200 },
         { field: 'addedAt', headerName: 'Added At', width: 150 },
     ];
-    const onRowsSelectionHandler = (ids) => {
-        const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
-        console.log("🚀 ~ file: SongsDataGrid.jsx:61 ~ onRowsSelectionHandler ~ selectedRowsData:", selectedRowsData)
-    };
+    const handleSelectionChange = useCallback((rowSelectionModel) => {
+        setSelectedRowIds(rowSelectionModel)
+    }, [setSelectedRowIds]);
+
+
     return (
-        <div style={{ height: "100", width: '100%' }}>
+        <Box sx={{ height: 700, width: '100%', mt: 2 }}>
             <DataGrid
                 rows={rows}
                 columns={columns}
                 checkboxSelection
-                onSelectionModelChange={(ids) => {
-                    console.log("Selected IDs:", ids);
-                    const selectedRowsData = rows.filter((row) => ids.includes(row.id));
-                    console.log("Selected Rows Data:", selectedRowsData);
-                    setSelectedRows(selectedRowsData);
-                }}
+                onRowSelectionModelChange={handleSelectionChange}
             />
-        </div>
+            <Box sx={{ mt: 4, textAlign: 'center' }}>
+                <Typography variant="subtitle1" gutterBottom>
+                    Please select the songs you want to use for your playlist cover.
+                </Typography>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={redirectToConfirmPage}
+                    sx={{ mt: 1 }}
+                >
+                    Done
+                </Button>
+            </Box>
+        </Box>
     );
 };
 
