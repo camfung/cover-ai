@@ -47,7 +47,7 @@ const ListDisplayComponent = ({ title }) => {
                                 position: 'relative', // Enables absolute positioning for the child
                             }}>
                                 <img
-                                    src={item.images[0].url}
+                                    src={item.images[0]?.url}
                                     alt={item.name}
                                     style={{
                                         position: 'absolute', // Absolute positioning
