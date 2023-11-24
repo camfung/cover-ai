@@ -1,4 +1,4 @@
-const OpenAIDAO = require("../dao/OpenAIDAO"); // Import the DAO class
+const OpenAIDAO = require("../dao/OpenAiDAO"); // Import the DAO class
 const config = require("../config");
 class OpenAIService {
   constructor() {
