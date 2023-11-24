@@ -27,6 +27,10 @@ module.exports.getPlaylistTracks = async (req, res) => {
       parseInt(numTracks),
       parseInt(offset)
     );
+    console.log(
+      "🚀 ~ file: playlistController.js:31 ~ module.exports.getPlaylistTracks= ~ tracksData:",
+      tracksData
+    );
     res.send(tracksData);
   } catch (error) {
     console.error("Error in getting playlist tracks:", error);
