@@ -1,7 +1,7 @@
 const express = require("express");
-const userController = require("./userController");
-const spotifyController = require("./spotifyController");
-const playlistsController = require("./playlistController");
+const userController = require("./UserController");
+const spotifyController = require("./SpotifyController");
+const playlistsController = require("./PlaylistController");
 const openAiController = require("./OpenAiController");
 // const productController = require("./productController");
 // import other controllers
