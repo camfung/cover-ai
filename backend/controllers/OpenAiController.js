@@ -36,10 +36,10 @@ router.get("/generate-images", async (req, res) => {
   }
 });
 
-router.post("/generate-playlist-cover", async (req, res) => {
+router.get("/generate-playlist-cover", async (req, res) => {
   try {
     const trackService = new TrackService(req.user.access_token);
-    const playlistIds = req.body.selectedSongIds;
+    const playlistIds = req.query.selectedSongIds.split(",");
     const tracks = await trackService.getTracksByIds(playlistIds);
     console.log(
       "🚀 ~ file: OpenAiController.js:43 ~ router.post ~ tracks:",

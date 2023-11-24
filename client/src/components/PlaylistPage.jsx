@@ -8,13 +8,12 @@ const PlaylistPage = () => {
     const [loading, setLoading] = useState(false);
     const handleConfirm = useCallback(async () => {
         try {
-            const selectedSongIds = selectedSongs.map(song => song.track.id);
+            const selectedSongIds = selectedSongs.map(song => song.track.id).join(",");
             setLoading(true);
 
-            const result = await axios.post(
+            const result = await axios.get(
                 import.meta.env.VITE_SERVER_URL + "/generate-playlist-cover",
-                { selectedSongIds },
-                { withCredentials: true }
+                { params: { selectedSongIds }, withCredentials: true }
             );
 
             setPlaylistCover(<img src={result.data.images.data[0].url} alt="playlist cover" style={{ width: '100%' }} />);
