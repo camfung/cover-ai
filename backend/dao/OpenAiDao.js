@@ -18,10 +18,6 @@ class OpenAIDAO {
         size: options.size,
         style: options.style,
       });
-      console.log(
-        "🚀 ~ file: OpenAIDAO.js:22 ~ OpenAIDAO ~ getImage ~ response:",
-        response
-      );
       return response;
     } catch (error) {
       throw error;
