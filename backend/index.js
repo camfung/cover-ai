@@ -23,7 +23,7 @@ app.use(
   })
 );
 const corsOptions = {
-  origin: process.env.CLIENT_URL,
+  origin: "*",
   credentials: true,
 };
 app.use(cors(corsOptions));
