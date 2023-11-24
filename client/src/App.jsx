@@ -10,6 +10,7 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/test" element={<LandingPage />} />
         <Route path="/playlists" element={<ListDisplayComponent />} />
         <Route path="/playlist/:id" element={<SongsDataGrid />} />
         <Route path="/makePlaylistCover" element={<PlaylistPage />} />
