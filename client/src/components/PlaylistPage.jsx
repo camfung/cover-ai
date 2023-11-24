@@ -17,7 +17,7 @@ const PlaylistPage = () => {
                 { withCredentials: true }
             );
 
-            setPlaylistCover(<img src={result.data.url} alt="playlist cover" style={{ width: '100%' }} />);
+            setPlaylistCover(<img src={result.data.images.data[0].url} alt="playlist cover" style={{ width: '100%' }} />);
         } catch (error) {
             // Handle the error here. For example, you might want to log the error or display a message to the user.
             console.error('Error generating playlist cover:', error);

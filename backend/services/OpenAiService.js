@@ -16,7 +16,7 @@ class OpenAIService {
   ) {
     try {
       const finalPrompt =
-        "A play list cover that follows the vibe of the following song titles: " +
+        "A alblum cover that follows the vibe of the following song titles: " +
         prompt;
       const options = {
         prompt: finalPrompt,
