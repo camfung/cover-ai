@@ -16,8 +16,8 @@ const SongsDataGrid = () => {
 
     const redirectToConfirmPage = useCallback(() => {
         const songs = selectedRowIds.map(id => songsData[id])
-        console.log("🚀 ~ file: SongsDataGrid.jsx:19 ~ redirectToConfirmPage ~ songs:", songs)
         location.state = { selectedSongs: songs }
+        console.log("🚀 ~ file: SongsDataGrid.jsx:19 ~ redirectToConfirmPage ~ songs:", songs)
         navigate("/makePlaylistCover", { state: { selectedSongs: songs } })
     }, [selectedRowIds, setSelectedSongs])
     useEffect(() => {
