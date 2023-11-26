@@ -8,25 +8,17 @@ const executeQuery = require("./dao/db").executeQuery; // Adjust the path as nec
 const cors = require("cors");
 const app = express();
 
-// Express session setup
 app.use(
-  session({
-    secret: config.sessionSecret,
-    resave: false,
-    saveUninitialized: true,
-    proxy: true, // Required for Heroku & Digital Ocean (regarding X-Forwarded-For)
-    cookie: {
-      secure: true, // required for cookies to work on HTTPS
-      httpOnly: false,
-      sameSite: "none",
-    },
+  session(
+    process.env.NODE_ENV == "prod" ? config.prodCookies : config.localCookies
+  )
+);
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
   })
 );
-const corsOptions = {
-  origin: "*",
-  credentials: true,
-};
-app.use(cors(corsOptions));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded());
