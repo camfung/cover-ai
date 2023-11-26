@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
-import { Button, Typography, Box } from '@mui/material';
+import { Button, Typography, Box, Snackbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import BackButton from './buttons/backButton';
 const SongsDataGrid = () => {
     const path = window.location.pathname; // This will be '/test' in your case
     const pathSegments = path.split('/'); // Split the path by '/'
@@ -11,15 +12,24 @@ const SongsDataGrid = () => {
     const [loading, setLoading] = useState([false]);
     const [selectedRowIds, setSelectedRowIds] = useState([]);
     const [selectedSongs, setSelectedSongs] = useState([]);
+    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const formRef = useRef();
 
     const redirectToConfirmPage = useCallback(() => {
         const songs = selectedRowIds.map(id => songsData[id])
+        if (songs.length === 0) {
+            setOpen(true)
+            return
+        }
         location.state = { selectedSongs: songs }
         console.log("🚀 ~ file: SongsDataGrid.jsx:19 ~ redirectToConfirmPage ~ songs:", songs)
         navigate("/makePlaylistCover", { state: { selectedSongs: songs } })
     }, [selectedRowIds, setSelectedSongs])
+
+    const goBack = useCallback(() => {
+        navigate("/playlists")
+    }, [])
     useEffect(() => {
         const fetchPlaylistsTracks = async () => {
             try {
@@ -71,6 +81,10 @@ const SongsDataGrid = () => {
 
     return (
         <Box sx={{ height: 700, width: '100%', mt: 2 }}>
+            <BackButton onClick={goBack}></BackButton>
+            <Typography variant="h4" gutterBottom>
+                Please select the songs you want to use for your playlist cover.
+            </Typography>
             <DataGrid
                 rows={rows}
                 columns={columns}
@@ -78,9 +92,7 @@ const SongsDataGrid = () => {
                 onRowSelectionModelChange={handleSelectionChange}
             />
             <Box sx={{ mt: 4, textAlign: 'center' }}>
-                <Typography variant="subtitle1" gutterBottom>
-                    Please select the songs you want to use for your playlist cover.
-                </Typography>
+
                 <Button
                     variant="contained"
                     color="primary"
@@ -90,6 +102,12 @@ const SongsDataGrid = () => {
                     Done
                 </Button>
             </Box>
+            <Snackbar
+                open={open}
+                autoHideDuration={3000}
+                message="Please Select at least one song."
+                onClose={() => setOpen(false)}
+            />
         </Box>
     );
 };

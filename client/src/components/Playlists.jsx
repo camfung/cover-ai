@@ -2,8 +2,8 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Card, CardContent, CardMedia, Typography, Grid } from '@mui/material';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-
-const ListDisplayComponent = ({ title }) => {
+import "./playlist.css"
+const Playlists = ({ title }) => {
     const navigate = useNavigate();
     // Define your color scheme here
     const primaryColor = '#123456'; // Example primary color
@@ -31,15 +31,15 @@ const ListDisplayComponent = ({ title }) => {
     };
     return (
         <>
-            <Typography variant="h4" gutterBottom sx={{ color: primaryColor, textAlign: 'center', mb: 4 }}>
-                {title}
+
+            <Typography variant="h4">
+                Your Playlists
             </Typography>
 
             <Grid container spacing={2}>
                 {playlists?.playlists.map((item, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
-                        <Card sx={{ backgroundColor: secondaryColor }} onClick={() => handleCardClick(item.id)}>
-                            {/* Style updates for cropping the image to a square */}
+                        <Card className='card' sx={{ backgroundColor: secondaryColor }} onClick={() => handleCardClick(item.id)}>
                             <div style={{
                                 width: '100%', // Width of the container
                                 height: 0, // Initial height
@@ -74,4 +74,4 @@ const ListDisplayComponent = ({ title }) => {
     );
 };
 
-export default ListDisplayComponent;
+export default Playlists;
