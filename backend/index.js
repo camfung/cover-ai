@@ -6,7 +6,22 @@ const passport = require("passport"); // Adjust the path as necessary
 const passportSetup = require("./middlewares/passport");
 const executeQuery = require("./dao/db").executeQuery; // Adjust the path as necessary
 const cors = require("cors");
+const logger = require("./middlewares/Logger");
 const app = express();
+
+// Logging middleware for all requests
+app.use((req, res, next) => {
+  logger.info(`Received ${req.method} request for ${req.url}`);
+  next();
+});
+
+// Add a middleware to log session state
+app.use((req, res, next) => {
+  if (req.session) {
+    logger.info(`Session state: ${JSON.stringify(req.session)}`);
+  }
+  next();
+});
 
 // Express session setup
 app.use(
@@ -26,6 +41,7 @@ const corsOptions = {
   origin: "*",
   credentials: true,
 };
+
 app.use(cors(corsOptions));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -45,7 +61,7 @@ passport.deserializeUser(async function (id, done) {
       done(null, false);
     }
   } catch (e) {
-    console.error(e);
+    logger.error(`Error in deserializeUser: ${e.message}`);
     done(e);
   }
 });

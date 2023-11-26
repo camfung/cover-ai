@@ -1,0 +1,3 @@
+{"level":"info","message":"Received GET request for /api/spotify-login","timestamp":"2023-11-25 23:18:45"}
+{"level":"info","message":"Received GET request for /api/callback?code=AQDVPrXj7P_pvKbRVAQy1WeasziG25L6bxOu91wNUE5UsJ7FA6ASHTMRKDsNTb2rReKWRtpzL2NZfrOf_HCO5wWHGywAGGFfgccqX3SY6CXVSGyCOy4ViyH4PoHE_DJK_aoVaFUAyG9-Q3jG-IBLTPY7TG3Rtz1tBvFh8pD6jwBwOE3JF4aHnE4aWAJvzIjNxg2-G4kXXutmO5y8bPOMJyuCa9n275QbTuU","timestamp":"2023-11-25 23:18:54"}
+{"level":"info","message":"Received GET request for /api/get-playlists","timestamp":"2023-11-25 23:18:58"}
