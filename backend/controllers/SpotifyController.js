@@ -1,7 +1,11 @@
 const passport = require("passport");
 const spotifyLogin = (req, res, next) => {
   passport.authenticate("spotify", {
-    scope: ["user-read-email", "user-read-private"],
+    scope: [
+      "user-read-email",
+      "user-read-private",
+      "user-read-currently-playing",
+    ],
     showDialog: true,
   })(req, res, next);
 };
