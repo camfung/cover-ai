@@ -18,4 +18,5 @@ router.get("/spotify-login", spotifyController.spotifyLogin);
 router.get("/callback", spotifyController.callback);
 router.get("/get-playlists", playlistsController.getPlaylists);
 router.get("/get-playlist-tracks", playlistsController.getPlaylistTracks);
+router.get("/upload-playlist-image", playlistsController.updatePlaylistImage);
 module.exports = router;

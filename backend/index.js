@@ -4,6 +4,7 @@ const controllerRoutes = require("./controllers");
 const config = require("./config");
 const passport = require("passport"); // Adjust the path as necessary
 const passportSetup = require("./middlewares/passport");
+const storage = require("node-persist");
 const executeQuery = require("./dao/db").executeQuery; // Adjust the path as necessary
 const cors = require("cors");
 const app = express();
@@ -23,6 +24,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded());
 app.use(express.json());
+
+app.use(async (req, res, next) => {
+  if (!req?.user?.access_token && process.env.NODE_ENV == "local") {
+    const access_token = (
+      await executeQuery("select access_token from users where id = 9", [])
+    ).rows[0].access_token;
+    req.user = {
+      access_token: access_token,
+    };
+  }
+  next();
+});
 passportSetup(passport);
 passport.serializeUser(function (user, done) {
   done(null, user.id);

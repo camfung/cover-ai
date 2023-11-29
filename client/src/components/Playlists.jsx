@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Card, CardContent, CardMedia, Typography, Grid } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, Grid, Box } from '@mui/material';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import "./playlist.css"
@@ -30,13 +30,13 @@ const Playlists = ({ title }) => {
         navigate(`/playlist/${itemId}`);
     };
     return (
-        <>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 
             <Typography variant="h4" gutterBottom>
                 Your Playlists
             </Typography>
 
-            <Grid container spacing={2}>
+            <Grid sx={{ maxWidth: "1024px" }} container spacing={2}>
                 {playlists?.playlists.map((item, index) => (
                     <Grid item xs={6} sm={6} md={3} key={index}>
                         <Card className='card' sx={{ backgroundColor: secondaryColor }} onClick={() => handleCardClick(item.id)}>
@@ -69,7 +69,7 @@ const Playlists = ({ title }) => {
                     </Grid>
                 ))}
             </Grid>
-        </>
+        </Box>
 
     );
 };

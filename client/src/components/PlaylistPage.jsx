@@ -1,11 +1,15 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Button, Typography, Paper, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Snackbar } from '@mui/material';
 import axios from 'axios';
 const cover = "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QeC7ZTxfNMcvjFmNESArRyDj/user-3opTxCsowq2CdcrpHmBcGVmZ/img-ebyWTNdVFaJ1wiHTtw4yemob.png?st=2023-11-24T06%3A43%3A24Z&se=2023-11-24T08%3A43%3A24Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-23T12%3A03%3A07Z&ske=2023-11-24T12%3A03%3A07Z&sks=b&skv=2021-08-06&sig=4YNpEcfUPBoGAHPQt5TSE7aa0sKdpGGqfQABUT8N0KY%3D"
 const PlaylistPage = () => {
     const [playlistCover, setPlaylistCover] = useState(null);
+    const [playlistCoverUrl, setPlaylistCoverUrl] = useState(null);
     const [selectedSongs, setSelectedSongs] = useState(location.state.selectedSongs);
+    const [playlistId, setPlaylistId] = useState(location.state.playlistId);
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [open, setOpen] = useState(false);
     const handleConfirm = useCallback(async () => {
         try {
             const selectedSongIds = selectedSongs.map(song => song.track.id).join(",");
@@ -15,7 +19,8 @@ const PlaylistPage = () => {
                 import.meta.env.VITE_SERVER_URL + "/generate-playlist-cover",
                 { params: { selectedSongIds }, withCredentials: true }
             );
-
+            console.log("🚀 ~ file: PlaylistPage.jsx:21 ~ handleConfirm ~ result:", result)
+            setPlaylistCoverUrl(result.data.images.data[0].url);
             setPlaylistCover(<img src={result.data.images.data[0].url} alt="playlist cover" style={{ width: '100%' }} />);
         } catch (error) {
             // Handle the error here. For example, you might want to log the error or display a message to the user.
@@ -27,7 +32,15 @@ const PlaylistPage = () => {
         }
     }, [selectedSongs, setPlaylistCover, setLoading]);
 
+    const sendImageToSpotify = useCallback(async () => {
+        try {
 
+            await axios.get(import.meta.env.VITE_SERVER_URL + "//upload-playlist-image", { withCredentials: true, params: { imageUrl: playlistCoverUrl, playlistId: playlistId } })
+            setOpen(true)
+        } catch (error) {
+            console.log(error)
+        }
+    })
 
     return (
         <Box sx={{ p: 3 }}>
@@ -52,7 +65,12 @@ const PlaylistPage = () => {
                 Confirm and Generate Cover
             </Button>
             <Box sx={{ minHeight: 300, border: '1px dashed grey', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: "column" }}>
-                {playlistCover ? playlistCover : <Typography>Playlist cover will appear here.</Typography>}
+                {playlistCover ? (
+                    <>
+                        {playlistCover}
+                        <Button onClick={sendImageToSpotify}>Upload to Spotify</Button>
+                    </>
+                ) : <Typography>Playlist cover will appear here.</Typography>}
                 {loading && (
                     <>
                         <Typography>Generating Image</Typography>
@@ -60,6 +78,12 @@ const PlaylistPage = () => {
                     </>
                 )}
             </Box>
+            <Snackbar
+                open={open}
+                autoHideDuration={10000}
+                message="Playlist Cover uploaded Successfully!"
+                onClose={() => setOpen(false)}
+            />
         </Box>
     );
 };

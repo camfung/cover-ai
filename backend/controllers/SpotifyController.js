@@ -5,6 +5,9 @@ const spotifyLogin = (req, res, next) => {
       "user-read-email",
       "user-read-private",
       "user-read-currently-playing",
+      "ugc-image-upload",
+      "playlist-modify-public",
+      "playlist-modify-private",
     ],
     showDialog: true,
   })(req, res, next);
