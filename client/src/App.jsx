@@ -4,10 +4,10 @@ import LandingPage from './components/LandingPage';
 import Playlists from './components/Playlists';
 import SongsDataGrid from './components/SongsDataGrid';
 import PlaylistPage from './components/PlaylistPage';
-
+import "./App.css"
 function App() {
   return (
-    <div>
+    <div >
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/test" element={<LandingPage />} />
