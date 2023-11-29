@@ -80,7 +80,7 @@ const SongsDataGrid = () => {
 
 
     return (
-        <Box sx={{ height: 700, width: '100%', mt: 2 }}>
+        <Box sx={{ height: 700, width: '100%', mt: 2, }}>
             <BackButton onClick={goBack}></BackButton>
             <Typography variant="h4" gutterBottom>
                 Please select the songs you want to use for your playlist cover.
@@ -90,6 +90,7 @@ const SongsDataGrid = () => {
                 columns={columns}
                 checkboxSelection
                 onRowSelectionModelChange={handleSelectionChange}
+                sx={{ backgroundColor: "white" }}
             />
             <Box sx={{ mt: 4, textAlign: 'center' }}>
 

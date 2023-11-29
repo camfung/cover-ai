@@ -64,7 +64,7 @@ const PlaylistPage = () => {
             >
                 Confirm and Generate Cover
             </Button>
-            <Box sx={{ minHeight: 300, border: '1px dashed grey', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: "column" }}>
+            <Box sx={{ minHeight: 300, border: '1px dashed grey', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: "column", backgroundColor: "white" }}>
                 {playlistCover ? (
                     <>
                         {playlistCover}
