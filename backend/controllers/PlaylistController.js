@@ -2,8 +2,8 @@ const PlaylistService = require("../services/PlaylistService");
 
 module.exports.getPlaylists = async (req, res) => {
   try {
-    const spotifyService = new PlaylistService(req.user.access_token);
-    const playlistsData = await spotifyService.getPageOfPlaylists(
+    const playlistService = new PlaylistService(req.user.access_token);
+    const playlistsData = await playlistService.getPageOfPlaylists(
       !!req.query?.nextPageOffSet ? req.query.nextPageOffSet : 0
     );
     res.send(playlistsData);
@@ -21,8 +21,8 @@ module.exports.getPlaylistTracks = async (req, res) => {
       return res.status(400).send("Invalid parameters");
     }
 
-    const spotifyService = new PlaylistService(req.user.access_token);
-    const tracksData = await spotifyService.getPageOfPlaylistTracks(
+    const playlistService = new PlaylistService(req.user.access_token);
+    const tracksData = await playlistService.getPageOfPlaylistTracks(
       playlistId,
       parseInt(numTracks),
       parseInt(offset)
@@ -35,5 +35,21 @@ module.exports.getPlaylistTracks = async (req, res) => {
   } catch (error) {
     console.error("Error in getting playlist tracks:", error);
     res.status(500).send("Internal Server Error");
+  }
+};
+
+module.exports.updatePlaylistImage = async (req, res) => {
+  try {
+    const imageUrl = req.query.imageUrl;
+    const playlistId = req.query.playlistId;
+
+    const playlistService = new PlaylistService(req.user.access_token);
+    await playlistService.updatePlaylistImage(playlistId, imageUrl);
+    res.status(204);
+    res.send();
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send(error);
   }
 };

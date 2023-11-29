@@ -7,7 +7,7 @@ import BackButton from './buttons/backButton';
 const SongsDataGrid = () => {
     const path = window.location.pathname; // This will be '/test' in your case
     const pathSegments = path.split('/'); // Split the path by '/'
-    const value = pathSegments[2]; // Get the second segment which is 'test'
+    const playlistId = pathSegments[2]; // Get the second segment which is 'test'
     const [songsData, setSongsData] = useState([]);
     const [loading, setLoading] = useState([false]);
     const [selectedRowIds, setSelectedRowIds] = useState([]);
@@ -22,7 +22,7 @@ const SongsDataGrid = () => {
             setOpen(true)
             return
         }
-        location.state = { selectedSongs: songs }
+        location.state = { selectedSongs: songs, playlistId: playlistId }
         console.log("🚀 ~ file: SongsDataGrid.jsx:19 ~ redirectToConfirmPage ~ songs:", songs)
         navigate("/makePlaylistCover", { state: { selectedSongs: songs } })
     }, [selectedRowIds, setSelectedSongs])
@@ -35,7 +35,7 @@ const SongsDataGrid = () => {
             try {
                 setLoading(true)
                 const response = await axios.get(
-                    import.meta.env.VITE_SERVER_URL + `/get-playlist-tracks?playlistId=${value}`,
+                    import.meta.env.VITE_SERVER_URL + `/get-playlist-tracks?playlistId=${playlistId}`,
                     { withCredentials: true }
                 );
                 setSongsData(response.data);

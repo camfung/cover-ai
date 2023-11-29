@@ -8,7 +8,6 @@ class OpenAIDAO {
 
   async getImage(options) {
     try {
-      let a = 10;
       const response = await this.openai.images.generate({
         prompt: options.prompt,
         model: options.model,

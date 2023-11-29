@@ -4,18 +4,22 @@ class PlaylistDao {
   constructor(accessToken) {
     this.spotifyApi = new SpotifyWebApi();
     this.spotifyApi.setAccessToken(accessToken);
+    this.accessToken = accessToken;
   }
   extractOffsetAndLimitFromUrl(url) {
-    const urlParams = new URLSearchParams(url.split("?")[1]);
-    const offset = parseInt(urlParams.get("offset"));
-    const limit = parseInt(urlParams.get("limit"));
+    if (url) {
+      const urlParams = new URLSearchParams(url.split("?")[1]);
+      const offset = parseInt(urlParams.get("offset"));
+      const limit = parseInt(urlParams.get("limit"));
 
-    return { offset, limit };
+      return { offset, limit };
+    }
+    return null;
   }
   async getPlaylists(nextPageOffset = 0) {
     try {
       const response = await this.spotifyApi.getUserPlaylists({
-        limit: 10,
+        limit: 50,
         offset: nextPageOffset,
       });
       const playlists = response.body.items;
@@ -42,6 +46,13 @@ class PlaylistDao {
       console.error("error in getting playlist tracks: ", e);
       throw e;
     }
+  }
+
+  async updatePlaylistImage(playlistId, base64Image) {
+    const response = await this.spotifyApi.uploadCustomPlaylistCoverImage(
+      playlistId,
+      base64Image
+    );
   }
 }
 
