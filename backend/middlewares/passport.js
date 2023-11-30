@@ -47,7 +47,7 @@ module.exports = function (passport) {
 
       // If not, create a new user
       res = await executeQuery(
-        "INSERT INTO users (spotify_id, email, display_name, access_token, created_at, updated_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *",
+        "INSERT INTO users (spotify_id, email, display_name, access_token, created_at, updated_at, credits) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 10) RETURNING *",
         [profile.id, profile.emails[0].value, profile.displayName, accessToken]
       );
 

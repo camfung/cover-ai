@@ -6,25 +6,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import BackButton from '../buttons/backButton';
-function CreditBar({ playlistTitle, goBack }) {
+function CreditBar({ playlistTitle, goBack, credits }) {
     const navigate = useNavigate();
-    const [credits, setCredits] = useState(0);
-    useEffect(() => {
-        const fetchCredits = async () => {
-            try {
-                const response = await axios.get(
-                    import.meta.env.VITE_SERVER_URL + `/get-credits`,
-                    { withCredentials: true }
-                );
-                setCredits(response.data.credits);
-                console.log("🚀 ~ file: PlaylistPage.jsx:28 ~ fetchCredits ~ response.data:", response.data)
-            } catch (error) {
-                // Handle error here
-                console.error("Error fetching playlists:", error);
-            }
-        };
-        fetchCredits();
-    }, []);
+
     return (
         <AppBar position="static" color="primary" sx={{ marginBottom: "20px" }}>
             <Toolbar sx={{ minHeight: '60px', display: 'flex', justifyContent: 'space-between' }}>

@@ -12,7 +12,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/test" element={<LandingPage />} />
         <Route path="/playlists" element={<Playlists />} />
-        <Route path="/playlist/:id" element={<SongsDataGrid />} />
+        <Route path="/playlist/:id/:playlistTitle" element={<SongsDataGrid />} />
         <Route path="/makePlaylistCover" element={<PlaylistPage />} />
       </Routes>
     </div>

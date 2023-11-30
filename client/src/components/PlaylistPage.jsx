@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import BackButton from './buttons/backButton';
 import CreditBar from './dataDisplay/CreditBar';
-
+import { useCredits } from '../utils/useCredits';
 const PlaylistPage = () => {
     const [playlistCover, setPlaylistCover] = useState(null);
     const [playlistCoverUrl, setPlaylistCoverUrl] = useState(null);
@@ -16,6 +16,8 @@ const PlaylistPage = () => {
     const [debug, setDebug] = useState(import.meta.env.VITE_NODE_ENV == "local"); // [DEBUG
     const navigate = useNavigate();
     const [errorOpen, setErrorOpen] = useState(false);
+    const { credits, fetchCredits } = useCredits();
+    const [outOfCreditsOpen, setOutOfCreditsOpen] = useState(false);
     console.log(location.state)
 
 
@@ -28,14 +30,15 @@ const PlaylistPage = () => {
                 import.meta.env.VITE_SERVER_URL + "/generate-playlist-cover",
                 { params: { selectedSongIds: selectedSongIds, debug: debug }, withCredentials: true }
             );
+            fetchCredits();
             setPlaylistCoverUrl(result.data.images.data[0].url);
             setPlaylistCover(<img src={result.data.images.data[0].url} alt="playlist cover" style={{ width: '100%' }} />);
         } catch (error) {
-            // Handle the error here. For example, you might want to log the error or display a message to the user.
-            console.error('Error generating playlist cover:', error);
-            // Optionally, update the UI to reflect that an error occurred
+            if (error.response.status == 402) {
+                setOutOfCreditsOpen(true)
+            }
+            console.log(error)
         } finally {
-            // This block will run regardless of whether the try block succeeds or the catch block is executed.
             setLoading(false);
         }
     }, [selectedSongs, setPlaylistCover, setLoading, debug]);
@@ -58,7 +61,7 @@ const PlaylistPage = () => {
     }, [])
     return (
         <Box sx={{ p: 3 }}>
-            <CreditBar goBack={goBack} playlistTitle={decodeURIComponent(location.state.playlistTitle)} />
+            <CreditBar credits={credits} goBack={goBack} playlistTitle={decodeURIComponent(location.state.playlistTitle)} />
 
             {import.meta.env.VITE_NODE_ENV == "local" ? <Switch checked={debug} onChange={(event) => handleSwitch(event)}>Free Image</Switch> : <></>}
 
@@ -107,6 +110,12 @@ const PlaylistPage = () => {
                 autoHideDuration={10000}
                 message="Unable to upload image :("
                 onClose={() => setErrorOpen(false)}
+            />
+            <Snackbar
+                open={outOfCreditsOpen}
+                autoHideDuration={10000}
+                message="Out of Credits :("
+                onClose={() => setErrorOpen(outOfCreditsOpen)}
             />
         </Box>
     );

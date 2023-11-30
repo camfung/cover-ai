@@ -5,10 +5,12 @@ import { Button, Typography, Box, Snackbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import BackButton from './buttons/backButton';
 import CreditBar from './dataDisplay/CreditBar';
+import { useCredits } from '../utils/useCredits';
 const SongsDataGrid = () => {
     const path = window.location.pathname;
     const pathSegments = path.split('/');
     const playlistId = pathSegments[2];
+    const playlistTitle = pathSegments[3];
     const [songsData, setSongsData] = useState([]);
     const [loading, setLoading] = useState([false]);
     const [selectedRowIds, setSelectedRowIds] = useState([]);
@@ -16,6 +18,7 @@ const SongsDataGrid = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const formRef = useRef();
+    const { credits, fetchCredits } = useCredits();
 
     const redirectToConfirmPage = useCallback(() => {
         const songs = selectedRowIds.map(id => songsData[id])
@@ -79,10 +82,9 @@ const SongsDataGrid = () => {
         setSelectedRowIds(rowSelectionModel)
     }, [setSelectedRowIds]);
 
-
     return (
         <Box sx={{ height: 700, width: '100%', mt: 2, }}>
-            <CreditBar playlistTitle={decodeURIComponent(location.state.playlistTitle)} goBack={goBack}></CreditBar>
+            <CreditBar credits={credits} playlistTitle={decodeURIComponent(playlistTitle)} goBack={goBack}></CreditBar>
             <Typography variant="h4" gutterBottom>
                 Please select the songs you want to use for your playlist cover.
             </Typography>

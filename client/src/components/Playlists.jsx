@@ -3,6 +3,7 @@ import { Card, CardContent, CardMedia, Typography, Grid, Box } from '@mui/materi
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import "./playlist.css"
+import playlistsSlice from '../state/playlistsSlice';
 const Playlists = ({ title }) => {
     const navigate = useNavigate();
     // Define your color scheme here
@@ -27,7 +28,8 @@ const Playlists = ({ title }) => {
         fetchPlaylists();
     }, []); // Empty dependency array means this runs once when the component mounts
     const handleCardClick = (item) => {
-        navigate(`/playlist/${item.id}`, { state: { playlistTitle: item.name } });
+        console.log("🚀 ~ file: Playlists.jsx:31 ~ handleCardClick ~ item:", item)
+        navigate(`/playlist/${item.id}/${item.name}`, { state: { playlistTitle: item.name } });
     };
     return (
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

@@ -48,11 +48,12 @@ router.get("/generate-playlist-cover", async (req, res) => {
     // check if the user has enough credits
     if (req.user.credits <= 0) {
       res.status(402).send("not enough credits");
+      return;
     } else {
-      executeQuery("UPDATE users set credits = $1 where spotify_id = $2", [
-        req.user.credits - 1,
-        req.user.spotify_id,
-      ]);
+      await executeQuery(
+        "UPDATE users set credits = $1 where spotify_id = $2",
+        [req.user.credits - 1, req.user.spotify_id]
+      );
     }
     const {
       model,
