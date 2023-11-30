@@ -3,7 +3,6 @@ import { Card, CardContent, CardMedia, Typography, Grid, Box } from '@mui/materi
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import "./playlist.css"
-import playlistsSlice from '../state/playlistsSlice';
 const Playlists = ({ title }) => {
     const navigate = useNavigate();
     // Define your color scheme here
