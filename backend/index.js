@@ -27,11 +27,10 @@ app.use(express.json());
 
 app.use(async (req, res, next) => {
   if (!req?.user?.access_token && process.env.NODE_ENV == "local") {
-    const access_token = (
-      await executeQuery("select access_token from users where id = 9", [])
-    ).rows[0].access_token;
+    const user = (await executeQuery("select * from users where id = 9", []))
+      .rows[0];
     req.user = {
-      access_token: access_token,
+      ...user,
     };
   }
   next();
