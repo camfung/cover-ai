@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const OpenAIService = require("../services/OpenAiService"); // Import your OpenAIService
 const TrackService = require("../services/TrackService");
+const { executeQuery } = require("../dao/db");
 
 // Initialize your OpenAIService and OpenAIDAO
 const openAIService = new OpenAIService();
@@ -43,6 +44,16 @@ router.get("/generate-playlist-cover", async (req, res) => {
     const result = await trackService.getTracksByIds(trackIds);
     const tracksArray = result.tracks.map((track) => track.name);
     const prompt = tracksArray.join(" ");
+
+    // check if the user has enough credits
+    if (req.user.credits <= 0) {
+      res.status(402).send("not enough credits");
+    } else {
+      executeQuery("UPDATE users set credits = $1 where spotify_id = $2", [
+        req.user.credits - 1,
+        req.user.spotify_id,
+      ]);
+    }
     const {
       model,
       numberOfImages,

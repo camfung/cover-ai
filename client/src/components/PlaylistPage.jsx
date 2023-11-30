@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Snackbar, Switch } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import BackButton from './buttons/backButton';
+import CreditBar from './dataDisplay/CreditBar';
 
 const PlaylistPage = () => {
     const [playlistCover, setPlaylistCover] = useState(null);
@@ -15,6 +16,9 @@ const PlaylistPage = () => {
     const [debug, setDebug] = useState(import.meta.env.VITE_NODE_ENV == "local"); // [DEBUG
     const navigate = useNavigate();
     const [errorOpen, setErrorOpen] = useState(false);
+    console.log(location.state)
+
+
     const handleConfirm = useCallback(async () => {
         try {
             const selectedSongIds = selectedSongs.map(song => song.track.id).join(",");
@@ -50,13 +54,13 @@ const PlaylistPage = () => {
         setDebug(event.target.checked)
     })
     const goBack = useCallback(() => {
-        navigate("/playlist/" + playlistId)
+        navigate("/playlist/" + playlistId + "/" + location.state.playlistTitle)
     }, [])
     return (
         <Box sx={{ p: 3 }}>
+            <CreditBar goBack={goBack} playlistTitle={decodeURIComponent(location.state.playlistTitle)} />
 
             {import.meta.env.VITE_NODE_ENV == "local" ? <Switch checked={debug} onChange={(event) => handleSwitch(event)}>Free Image</Switch> : <></>}
-            <BackButton onClick={goBack}></BackButton>
 
             <Typography variant="h6" sx={{ mb: 2 }}>
                 Selected Songs

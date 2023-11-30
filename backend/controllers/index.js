@@ -11,6 +11,7 @@ const router = express.Router();
 // User routes
 router.get("/users", userController.getUsers);
 router.post("/users", userController.createUser);
+router.get("/get-credits", userController.getCredits);
 router.use(openAiController);
 
 // spotify routes

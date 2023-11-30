@@ -26,8 +26,8 @@ const Playlists = ({ title }) => {
 
         fetchPlaylists();
     }, []); // Empty dependency array means this runs once when the component mounts
-    const handleCardClick = (itemId) => {
-        navigate(`/playlist/${itemId}`);
+    const handleCardClick = (item) => {
+        navigate(`/playlist/${item.id}`, { state: { playlistTitle: item.name } });
     };
     return (
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -39,7 +39,7 @@ const Playlists = ({ title }) => {
             <Grid sx={{ maxWidth: "1024px" }} container spacing={2}>
                 {playlists?.playlists.map((item, index) => (
                     <Grid item xs={6} sm={6} md={3} key={index}>
-                        <Card className='card' sx={{ backgroundColor: secondaryColor }} onClick={() => handleCardClick(item.id)}>
+                        <Card className='card' sx={{ backgroundColor: secondaryColor }} onClick={() => handleCardClick(item)}>
                             <div style={{
                                 width: '100%', // Width of the container
                                 height: 0, // Initial height

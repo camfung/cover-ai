@@ -4,10 +4,11 @@ import axios from 'axios';
 import { Button, Typography, Box, Snackbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import BackButton from './buttons/backButton';
+import CreditBar from './dataDisplay/CreditBar';
 const SongsDataGrid = () => {
-    const path = window.location.pathname; // This will be '/test' in your case
-    const pathSegments = path.split('/'); // Split the path by '/'
-    const playlistId = pathSegments[2]; // Get the second segment which is 'test'
+    const path = window.location.pathname;
+    const pathSegments = path.split('/');
+    const playlistId = pathSegments[2];
     const [songsData, setSongsData] = useState([]);
     const [loading, setLoading] = useState([false]);
     const [selectedRowIds, setSelectedRowIds] = useState([]);
@@ -81,7 +82,7 @@ const SongsDataGrid = () => {
 
     return (
         <Box sx={{ height: 700, width: '100%', mt: 2, }}>
-            <BackButton onClick={goBack}></BackButton>
+            <CreditBar playlistTitle={decodeURIComponent(location.state.playlistTitle)} goBack={goBack}></CreditBar>
             <Typography variant="h4" gutterBottom>
                 Please select the songs you want to use for your playlist cover.
             </Typography>

@@ -5,10 +5,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 function BackButton({ onClick }) {
     return (
         <Button
-            variant="contained"
-            color="primary"
             startIcon={<ArrowBackIcon />}
             onClick={onClick}
+            sx={{ color: "white" }}
         >
             Back
         </Button>
