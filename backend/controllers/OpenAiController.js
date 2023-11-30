@@ -43,27 +43,36 @@ router.get("/generate-playlist-cover", async (req, res) => {
     const result = await trackService.getTracksByIds(trackIds);
     const tracksArray = result.tracks.map((track) => track.name);
     const prompt = tracksArray.join(" ");
-    const { model, numberOfImages, quality, responseFormat, size, style } =
-      req.query;
-
-    const generatedImages = await openAIService.generateImages(
-      prompt,
+    const {
       model,
-      Number(numberOfImages),
+      numberOfImages,
       quality,
       responseFormat,
       size,
-      style
-    );
-
-    // generatedImages = {
-    //   data: [
-    //     {
-    //       url: "https://exposureee.in/wp-content/uploads/2023/07/image-1536x1536.png",
-    //     },
-    //   ],
-    // };
-
+      style,
+      debug,
+    } = req.query;
+    const a = debug === "true";
+    let generatedImages;
+    if (debug === "false") {
+      generatedImages = await openAIService.generateImages(
+        prompt,
+        model,
+        Number(numberOfImages),
+        quality,
+        responseFormat,
+        size,
+        style
+      );
+    } else {
+      generatedImages = {
+        data: [
+          {
+            url: "https://exposureee.in/wp-content/uploads/2023/07/image-1536x1536.png",
+          },
+        ],
+      };
+    }
     res.status(200).json({ images: generatedImages });
   } catch (error) {
     console.error("Error generating images:", error);
