@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Snackbar } from '@mui/material';
+import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Snackbar, Switch } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-const cover = "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QeC7ZTxfNMcvjFmNESArRyDj/user-3opTxCsowq2CdcrpHmBcGVmZ/img-ebyWTNdVFaJ1wiHTtw4yemob.png?st=2023-11-24T06%3A43%3A24Z&se=2023-11-24T08%3A43%3A24Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-23T12%3A03%3A07Z&ske=2023-11-24T12%3A03%3A07Z&sks=b&skv=2021-08-06&sig=4YNpEcfUPBoGAHPQt5TSE7aa0sKdpGGqfQABUT8N0KY%3D"
+import BackButton from './buttons/backButton';
+
 const PlaylistPage = () => {
     const [playlistCover, setPlaylistCover] = useState(null);
     const [playlistCoverUrl, setPlaylistCoverUrl] = useState(null);
@@ -10,6 +12,9 @@ const PlaylistPage = () => {
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [debug, setDebug] = useState(import.meta.env.VITE_NODE_ENV == "local"); // [DEBUG
+    const navigate = useNavigate();
+    const [errorOpen, setErrorOpen] = useState(false);
     const handleConfirm = useCallback(async () => {
         try {
             const selectedSongIds = selectedSongs.map(song => song.track.id).join(",");
@@ -17,9 +22,8 @@ const PlaylistPage = () => {
 
             const result = await axios.get(
                 import.meta.env.VITE_SERVER_URL + "/generate-playlist-cover",
-                { params: { selectedSongIds }, withCredentials: true }
+                { params: { selectedSongIds: selectedSongIds, debug: debug }, withCredentials: true }
             );
-            console.log("🚀 ~ file: PlaylistPage.jsx:21 ~ handleConfirm ~ result:", result)
             setPlaylistCoverUrl(result.data.images.data[0].url);
             setPlaylistCover(<img src={result.data.images.data[0].url} alt="playlist cover" style={{ width: '100%' }} />);
         } catch (error) {
@@ -30,20 +34,30 @@ const PlaylistPage = () => {
             // This block will run regardless of whether the try block succeeds or the catch block is executed.
             setLoading(false);
         }
-    }, [selectedSongs, setPlaylistCover, setLoading]);
+    }, [selectedSongs, setPlaylistCover, setLoading, debug]);
 
     const sendImageToSpotify = useCallback(async () => {
         try {
-
-            await axios.get(import.meta.env.VITE_SERVER_URL + "//upload-playlist-image", { withCredentials: true, params: { imageUrl: playlistCoverUrl, playlistId: playlistId } })
+            await axios.get(import.meta.env.VITE_SERVER_URL + "/upload-playlist-image", { withCredentials: true, params: { imageUrl: playlistCoverUrl, playlistId: playlistId } })
             setOpen(true)
         } catch (error) {
             console.log(error)
+            setErrorOpen(true)
         }
     })
 
+    const handleSwitch = useCallback((event) => {
+        setDebug(event.target.checked)
+    })
+    const goBack = useCallback(() => {
+        navigate("/playlist/" + playlistId)
+    }, [])
     return (
         <Box sx={{ p: 3 }}>
+
+            {import.meta.env.VITE_NODE_ENV == "local" ? <Switch checked={debug} onChange={(event) => handleSwitch(event)}>Free Image</Switch> : <></>}
+            <BackButton onClick={goBack}></BackButton>
+
             <Typography variant="h6" sx={{ mb: 2 }}>
                 Selected Songs
             </Typography>
@@ -83,6 +97,12 @@ const PlaylistPage = () => {
                 autoHideDuration={10000}
                 message="Playlist Cover uploaded Successfully!"
                 onClose={() => setOpen(false)}
+            />
+            <Snackbar
+                open={errorOpen}
+                autoHideDuration={10000}
+                message="Unable to upload image :("
+                onClose={() => setErrorOpen(false)}
             />
         </Box>
     );

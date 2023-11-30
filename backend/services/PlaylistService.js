@@ -64,17 +64,9 @@ class PlaylistService {
 
     while (size > 150) {
       currentSideLength = Math.ceil(currentSideLength * 0.95);
-      console.log(
-        "🚀 ~ file: PlaylistService.js:67 ~ PlaylistService ~ shrinkTo256Kb= ~ currentSideLength:",
-        currentSideLength
-      );
       image = await this.resizeImage(image, currentSideLength);
       metadata = await sharp(image).metadata();
       size = metadata.size / 1024;
-      console.log(
-        "🚀 ~ file: PlaylistService.js:70 ~ PlaylistService ~ shrinkTo256Kb= ~ size:",
-        size
-      );
     }
 
     return image;
