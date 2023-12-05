@@ -6,7 +6,7 @@ import BackButton from './buttons/backButton';
 import CreditBar from './dataDisplay/CreditBar';
 import { useCredits } from '../utils/useCredits';
 import useScreenSize from '../hooks/useScreenSize';
-
+import charmander from "../../public/charmander.gif";
 const PlaylistPage = () => {
     const [playlistCover, setPlaylistCover] = useState(null);
     const [playlistCoverUrl, setPlaylistCoverUrl] = useState(null);
@@ -36,7 +36,7 @@ const PlaylistPage = () => {
         gridTemplateColumns: "2fr 3fr",
         alignItems: 'center',
         flexDirection: "column",
-        gridGap: "10% 10%"
+        gridGap: screenSize != "small" ? "10% 10%" : "5% 5%",
     };
 
     const songBoxStyle = {
@@ -59,6 +59,8 @@ const PlaylistPage = () => {
         height: screenSize != "small" ? "90%" : "auto",
         aspectRatio: "1 / 1",
         flexGrow: 3,
+        flexDirection: loading ? "column" : "",
+        backgroundColor: loading ? "white" : "transparent"
     };
 
     const buttonContainerStyle = {
@@ -75,9 +77,13 @@ const PlaylistPage = () => {
     };
     const handleConfirm = useCallback(async () => {
         try {
+            setPlaylistCover("")
             const selectedSongIds = selectedSongs.map(song => song.track.id).join(",");
             setLoading(true);
-
+            if (debug) {
+                // wait 5 seconds
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            }
             const result = await axios.get(
                 import.meta.env.VITE_SERVER_URL + "/generate-playlist-cover",
                 { params: { selectedSongIds: selectedSongIds, debug: debug }, withCredentials: true }
@@ -93,7 +99,7 @@ const PlaylistPage = () => {
         } finally {
             setLoading(false);
         }
-    }, [selectedSongs, setPlaylistCover, setLoading, debug]);
+    }, [selectedSongs, setPlaylistCover, setLoading, debug, setPlaylistCoverUrl]);
 
     const sendImageToSpotify = useCallback(async () => {
         try {
@@ -115,9 +121,9 @@ const PlaylistPage = () => {
         <Box sx={boxStyle}>
             <CreditBar credits={credits} goBack={goBack} playlistTitle={decodeURIComponent(location.state.playlistTitle)} />
 
-            {/* {import.meta.env.VITE_NODE_ENV === "local" && (
+            {import.meta.env.VITE_NODE_ENV === "local" && (
                 <Switch checked={debug} onChange={(event) => handleSwitch(event)}>Free Image</Switch>
-            )} */}
+            )}
             <Box sx={innerBoxStyle}>
                 <Box sx={songBoxStyle}>
                     <Typography variant="h6" sx={selectedSongsTypographyStyle}>
@@ -134,15 +140,17 @@ const PlaylistPage = () => {
                     </Paper>
                 </Box>
                 <Box sx={coverBoxStyle}>
-                    {playlistCover ? (
-                        <>{playlistCover}</>
-                    ) : (
+                    {!loading && !playlistCover && (
                         <Typography>Playlist cover will appear here.</Typography>
                     )}
+                    {!loading && (
+                        <>
+                            {playlistCover}
+                        </>)}
                     {loading && (
                         <>
                             <Typography>Generating Image</Typography>
-                            <img src="https://i.imgur.com/pKV7YwY.gif" alt="" />
+                            <img src="https://i.pinimg.com/originals/e0/62/ce/e062ce651f5bbec96fa3a92398272c6b.gif" alt="charmander" />
                         </>
                     )}
                 </Box>
@@ -161,6 +169,8 @@ const PlaylistPage = () => {
                     sx={buttonStyle}
                     color="primary"
                     onClick={sendImageToSpotify}
+                    disabled={credits < 0 || !playlistCover}
+
                 >
                     Upload to Spotify
                 </Button>
