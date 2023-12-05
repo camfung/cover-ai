@@ -5,6 +5,7 @@ import axios from 'axios';
 import BackButton from './buttons/backButton';
 import CreditBar from './dataDisplay/CreditBar';
 import { useCredits } from '../utils/useCredits';
+
 const PlaylistPage = () => {
     const [playlistCover, setPlaylistCover] = useState(null);
     const [playlistCoverUrl, setPlaylistCoverUrl] = useState(null);
@@ -60,45 +61,68 @@ const PlaylistPage = () => {
         navigate("/playlist/" + playlistId + "/" + location.state.playlistTitle)
     }, [])
     return (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3, height: "80vh", maxWidth: "1024px", display: 'flex', flexDirection: "column", margin: "0 auto" }}>
             <CreditBar credits={credits} goBack={goBack} playlistTitle={decodeURIComponent(location.state.playlistTitle)} />
 
             {import.meta.env.VITE_NODE_ENV == "local" ? <Switch checked={debug} onChange={(event) => handleSwitch(event)}>Free Image</Switch> : <></>}
+            <Box sx={{ height: "80%", display: "grid", gridTemplateColumns: "2fr 3fr", alignItems: 'center', justifyContent: "center", gridGap: "10% 10%", }}>
 
-            <Typography variant="h6" sx={{ mb: 2 }}>
-                Selected Songs
-            </Typography>
-            <Paper sx={{ mb: 3, maxHeight: 300, overflow: 'auto' }}>
-                <List>
-                    {selectedSongs.map((song, index) => (
-                        <ListItem key={index}>
-                            <ListItemText primary={song.track.name} secondary={song.track.artists.map((item) => item.name)} />
-                        </ListItem>
-                    ))}
-                </List>
-            </Paper>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleConfirm}
-                sx={{ mb: 3 }}
-            >
-                Confirm and Generate Cover
-            </Button>
-            <Box sx={{ minHeight: 300, border: '1px dashed grey', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: "column", backgroundColor: "white" }}>
-                {playlistCover ? (
-                    <>
-                        {playlistCover}
-                        <Button onClick={sendImageToSpotify}>Upload to Spotify</Button>
-                    </>
-                ) : <Typography>Playlist cover will appear here.</Typography>}
-                {loading && (
-                    <>
-                        <Typography>Generating Image</Typography>
-                        <img src="https://i.imgur.com/pKV7YwY.gif" alt="" />
-                    </>
-                )}
+                <Box sx={{ backgroundColor: "white", height: "90%", overflow: "hidden" }}>
+                    <Typography variant="h6" sx={{ mb: 2, backgroundColor: "#FF7700", color: "white" }}>
+                        Selected Songs
+                    </Typography>
+                    <Paper sx={{ overflow: "auto", height: "100%" }}>
+                        <List>
+                            {selectedSongs.map((song, index) => (
+                                <ListItem key={index}>
+                                    <ListItemText primary={song.track.name} secondary={song.track.artists.map((item) => item.name)} />
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Paper>
+                </Box>
+                <Box sx={{
+                    // Set the width equal to the height to make the box a square
+                    border: "3px dashed black",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "90%",
+                    aspectRatio: "1 / 1",
+                }}>
+                    {playlistCover ? (
+                        <>
+                            {playlistCover}
+
+                        </>
+                    ) : <Typography>Playlist cover will appear here.</Typography>}
+                    {loading && (
+                        <>
+                            <Typography>Generating Image</Typography>
+                            <img src="https://i.imgur.com/pKV7YwY.gif" alt="" />
+                        </>
+                    )}
+                </Box>
             </Box>
+            <Box sx={{ width: "100%", display: "grid", gridTemplateColumns: "2fr 3fr", gridGap: "10% 10%", }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleConfirm}
+                    sx={{ maxWidth: "300px", margin: "0 auto" }}
+                >
+                    Confirm and Generate Cover
+                </Button>
+                <Button
+                    variant="contained"
+                    sx={{ maxWidth: "300px", margin: "0 auto" }}
+                    color="primary"
+                    onClick={sendImageToSpotify}
+                >
+                    Upload to Spotify
+                </Button>
+            </Box>
+
             <Snackbar
                 open={open}
                 autoHideDuration={10000}
@@ -117,7 +141,7 @@ const PlaylistPage = () => {
                 message="Out of Credits :("
                 onClose={() => setErrorOpen(outOfCreditsOpen)}
             />
-        </Box>
+        </Box >
     );
 };
 

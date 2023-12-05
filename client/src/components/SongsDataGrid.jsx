@@ -83,7 +83,7 @@ const SongsDataGrid = () => {
     }, [setSelectedRowIds]);
 
     return (
-        <Box sx={{ height: 700, width: '100%', mt: 2, }}>
+        <Box sx={{ height: "70vh", width: '100%', mt: 2, maxWidth: "1024px", margin: "0 auto" }}>
             <CreditBar credits={credits} playlistTitle={decodeURIComponent(playlistTitle)} goBack={goBack}></CreditBar>
             <Typography variant="h4" gutterBottom>
                 Please select the songs you want to use for your playlist cover.
