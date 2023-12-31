@@ -18,7 +18,7 @@ const SelectDeck = ({ decks, deck, handleChange }) => {
                     >
                         {decks?.map((deck) => (
                             <MenuItem key={deck.id} value={deck.id}>
-                                {deck.title}
+                                {`${deck.title} (${deck.card_count} cards)`}
                             </MenuItem>
                         ))}
                     </Select>

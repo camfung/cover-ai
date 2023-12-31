@@ -28,6 +28,7 @@ const StirThePot = () => {
         }
     }, [deck]);
     const handleChange = useCallback((event) => {
+        console.log("🚀 ~ file: stirthepot.jsx:31 ~ handleChange ~ event:", event)
         setDeck(event.target.value);
         getCards(event.target.value);
     }, [deck]);
