@@ -54,7 +54,8 @@ const StirThePot = () => {
 
 
     const prevQuestion = useCallback(() => {
-        if (currentQuestion > 0) setCurrentQuestion(currentQuestion - 1)
+        console.log(currentQuestion)
+        if (currentQuestion >= 0) setCurrentQuestion(currentQuestion - 1)
     }, [currentQuestion, setCurrentQuestion]);
 
     const nextQuestion = useCallback(() => {
