@@ -4,6 +4,7 @@ import axios from "axios";
 import SelectDeck from "./SelectDeck";
 import EnterQuestions from "./EnterQuestions";
 import Cards from "./Cards";
+import Spinner from "./Spinner";
 
 const StirThePot = () => {
     const [decks, setDecks] = useState([]);
@@ -87,6 +88,7 @@ const StirThePot = () => {
                 <Button variant="outlined" onClick={prevQuestion}>Prev</Button>
                 <Button variant="contained" onClick={nextQuestion}>Next</Button>
             </Box>
+            <Spinner></Spinner>
         </Box>
     );
 }
