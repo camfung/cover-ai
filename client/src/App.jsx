@@ -5,6 +5,10 @@ import Playlists from './components/Playlists';
 import SongsDataGrid from './components/SongsDataGrid';
 import PlaylistPage from './components/PlaylistPage';
 import "./App.css"
+import StirThePot from './components/extraStuff/stirthepot';
+import EnterQuestions from './components/extraStuff/EnterQuestions';
+import ManageDecks from './components/extraStuff/ManageDecks';
+
 function App() {
   return (
     <div >
@@ -14,6 +18,8 @@ function App() {
         <Route path="/playlists" element={<Playlists />} />
         <Route path="/playlist/:id/:playlistTitle" element={<SongsDataGrid />} />
         <Route path="/makePlaylistCover" element={<PlaylistPage />} />
+        <Route path="/stirthepot" element={<StirThePot />} />
+        <Route path="/managedecks" element={<ManageDecks />} />
       </Routes>
     </div>
   );
