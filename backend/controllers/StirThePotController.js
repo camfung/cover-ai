@@ -15,7 +15,9 @@ module.exports.CreateCard = async (req, res) => {
 
 module.exports.getAllDecks = async (req, res) => {
   try {
-    const result = await executeQuery("select * from deck");
+    const result = await executeQuery(
+      "SELECT d.*, card_count FROM deck d JOIN ( SELECT deck_id, COUNT(*) as card_count FROM card GROUP BY deck_id ) c ON d.id = c.deck_id;"
+    );
     res.send(result);
   } catch (error) {
     console.error("Error in getting playlists:", error);
