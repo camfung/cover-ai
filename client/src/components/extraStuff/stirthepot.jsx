@@ -59,8 +59,10 @@ const StirThePot = () => {
     }, [currentQuestion, setCurrentQuestion]);
 
     const nextQuestion = useCallback(() => {
-        if (currentQuestion < questions.length - 1) setCurrentQuestion(currentQuestion + 1)
-    }, [currentQuestion, setCurrentQuestion]);
+        console.log("🚀 ~ file: stirthepot.jsx:64 ~ nextQuestion ~ currentQuestion:", currentQuestion)
+        console.log("🚀 ~ file: stirthepot.jsx:65 ~ nextQuestion ~ questions.length :", questions.length)
+        if (currentQuestion <= questions.length - 1) setCurrentQuestion(currentQuestion + 1)
+    }, [currentQuestion, setCurrentQuestion, questions]);
 
 
     return (
