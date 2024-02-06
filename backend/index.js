@@ -5,7 +5,7 @@ const config = require("./config");
 const passport = require("passport"); // Adjust the path as necessary
 const passportSetup = require("./middlewares/passport");
 const storage = require("node-persist");
-const executeQuery = require("./dao/db").executeQuery; // Adjust the path as necessary
+const executeQuery = require("./dao/db").executeQuery;
 const cors = require("cors");
 const app = express();
 
@@ -30,8 +30,7 @@ app.use(async (req, res, next) => {
     (!req?.user?.access_token && process.env.NODE_ENV == "local") ||
     req.header.noAuth
   ) {
-    const user = (await executeQuery("select * from users where id = 9", []))
-      .rows[0];
+    const user = (await executeQuery("select * from users where id = 9", []))[0];
     req.user = {
       ...user,
     };
@@ -46,8 +45,8 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(async function (id, done) {
   try {
     let result = await executeQuery("SELECT * FROM users WHERE id = $1", [id]);
-    if (result.rows.length > 0) {
-      done(null, result.rows[0]);
+    if (result.length > 0) {
+      done(null, result[0]);
     } else {
       done(null, false);
     }

@@ -11,7 +11,7 @@ const executeQuery = async (query, values) => {
     const client = await pool.connect();
     try {
       const result = await client.query(query, values);
-      return result;
+      return result.rows;
     } finally {
       client.release();
     }

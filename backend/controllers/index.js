@@ -4,6 +4,7 @@ const spotifyController = require("./SpotifyController");
 const playlistsController = require("./PlaylistController");
 const openAiController = require("./OpenAiController");
 const stirThePotController = require("./StirThePotController");
+const SystemMessagesController = require("./SystemMessageController")
 // const productController = require("./productController");
 // import other controllers
 
@@ -27,4 +28,12 @@ router.post("/card", stirThePotController.CreateCard);
 router.get("/deck", stirThePotController.getAllDecks);
 router.get("/card", stirThePotController.getAllCardsForDeck);
 router.post("/deck", stirThePotController.createDeck);
+
+// messages controller
+router.get('/messages', SystemMessagesController.getAllMessages);
+router.get('/messages/:id', SystemMessagesController.getMessageById);
+router.post('/messages', SystemMessagesController.createMessage);
+router.put('/messages/:id', SystemMessagesController.updateMessage);
+router.delete('/messages/:id', SystemMessagesController.deleteMessage);
+
 module.exports = router;

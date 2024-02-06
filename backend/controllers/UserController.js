@@ -17,7 +17,7 @@ const getCredits = async (req, res) => {
       "SELECT credits FROM users WHERE spotify_id = $1",
       [spotifyId]
     );
-    res.send(result.rows[0]);
+    res.send(result[0]);
   } catch (error) {
     console.log(error);
   }

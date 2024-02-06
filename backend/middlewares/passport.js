@@ -34,15 +34,15 @@ module.exports = function (passport) {
         [profile.id]
       );
 
-      if (res.rows.length > 0) {
+      if (res.length > 0) {
         // Update the access token if it has changed
-        if (res.rows[0].access_token !== accessToken) {
+        if (res[0].access_token !== accessToken) {
           await executeQuery(
             "UPDATE users SET access_token = $1, updated_at = CURRENT_TIMESTAMP WHERE spotify_id = $2",
             [accessToken, profile.id]
           );
         }
-        return res.rows[0]; // User exists
+        return res[0]; // User exists
       }
 
       // If not, create a new user
@@ -51,7 +51,7 @@ module.exports = function (passport) {
         [profile.id, profile.emails[0].value, profile.displayName, accessToken]
       );
 
-      return res.rows[0];
+      return res[0];
     } catch (err) {
       throw err;
     }

@@ -7,6 +7,8 @@ import Cards from "./Cards";
 import Spinner from "./Spinner";
 
 const StirThePot = () => {
+    console.log("🚀 ~ StirThePot ~ import.meta.env.VITE_NODE_ENV):", import.meta.env.VITE_NODE_ENV)
+    console.log("🚀 ~ StirThePot ~ import.meta.env.VITE_SERVER_URL:", import.meta.env.VITE_SERVER_URL)
     const [decks, setDecks] = useState([]);
     const [hide, setHide] = useState(false);
     const [deck, setDeck] = useState({});
@@ -16,14 +18,14 @@ const StirThePot = () => {
     useEffect(() => {
         const getDecks = async () => {
             const result = await axios.get(import.meta.env.VITE_SERVER_URL + "/deck", { noAuth: true });
-            setDecks(result.data.rows);
+            setDecks(result.data);
         };
         getDecks();
     }, []);
     const getCards = useCallback(async (deckId) => {
         try {
             const response = await axios.get(import.meta.env.VITE_SERVER_URL + "/card?deck_id=" + deckId, { noAuth: true });
-            setQuestions(shuffle(response.data.rows.map((question) => question.question)));
+            setQuestions(shuffle(response.data.map((question) => question.question)));
         } catch (error) {
             console.error("Error fetching cards:", error);
         }
